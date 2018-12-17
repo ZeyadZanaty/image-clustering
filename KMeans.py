@@ -48,10 +48,10 @@ class KMeans:
     def update_centroids(self):
         for i in range(self.n_clusters):
             cluster = self.clusters['data'][i]
-            if cluster is None:
+            if cluster == []:
                 self.centroids[i] = self.fit_data[np.random.choice(range(len(self.fit_data)))]
             else:
-                self.centroids[i] = np.mean(cluster,axis=0)
+                self.centroids[i] = np.mean(np.vstack((self.centroids[i],cluster)),axis=0)
     
     def reshape_cluster(self):
         for id,mat in list(self.clusters['data'].items()):
@@ -61,7 +61,8 @@ class KMeans:
         if iterations > self.max_iter:
             return True
         self.centroids_dist = np.linalg.norm(np.array(updated_centroids)-np.array(centroids))
-        if self.centroids_dist<=0.0000001:
+        if self.centroids_dist<=1e-10:
+            print("Converged! With distance:",self.centroids_dist)
             return True
         return False
 
