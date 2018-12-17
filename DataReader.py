@@ -14,15 +14,13 @@ class DataReader:
         self.test_dict = unpickle(join(self.root_dir,'test'))
     
     def get_train_data(self):
-        data =  np.array(self.train_dict[b'data'])
-        # data_for_plot =  self.reshape_to_plot(data)
+        data = np.array(self.train_dict[b'data'])
         lbls_class = np.array(self.train_dict[b'fine_labels'])
         lbls_sub = np.array(self.train_dict[b'coarse_labels'])
         return data,lbls_class,lbls_sub
 
     def get_test_data(self):
-        data =  self.test_dict[b'data']
-        # data_for_plot =  self.reshape_to_plot(data)
+        data =  np.array(self.test_dict[b'data'])
         lbls_class = np.array(self.test_dict[b'fine_labels'])
         lbls_sub = np.array(self.test_dict[b'coarse_labels'])
         return data,lbls_class,lbls_sub
@@ -42,6 +40,14 @@ class DataReader:
                 i = np.random.choice(range(len(data)))
                 ax[j][k].set_axis_off()
                 ax[j][k].imshow(data[i:i+1][0])
+        plt.show()
+    
+    def plot_img(self,data):
+        assert data.shape == (3072,)
+        data = data.reshape(1,3072)
+        data = data.reshape(data.shape[0],3,32,32).transpose(0,2,3,1).astype("uint8")
+        fig, ax = plt.subplots(figsize=(3,3))
+        ax.imshow(data[0])
         plt.show()
 
 def unpickle(file):
