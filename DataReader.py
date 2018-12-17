@@ -62,7 +62,7 @@ class DataReader:
         y1 = n//x1
         x = min(x1,y1)
         y = max(x1,y1)
-        fig, ax = plt.subplots(x,y,figsize=(3,3))
+        fig, ax = plt.subplots(x,y,figsize=(5,5))
         i=0
         for j in range(x):
             for k in range(y):
@@ -77,7 +77,7 @@ class DataReader:
         assert data.shape == (3072,)
         data = data.reshape(1,3072)
         data = data.reshape(data.shape[0],3,32,32).transpose(0,2,3,1).astype("uint8")
-        fig, ax = plt.subplots(figsize=(3,3))
+        fig, ax = plt.subplots(figsize=(5,5))
         ax.imshow(data[0])
         plt.show()
 
