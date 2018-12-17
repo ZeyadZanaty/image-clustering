@@ -64,7 +64,7 @@ class KMeans:
         if iterations > self.max_iter:
             return True
         self.centroids_dist = np.linalg.norm(np.array(updated_centroids)-np.array(centroids))
-        if self.centroids_dist<0.5:
+        if self.centroids_dist<=0.0000001:
             return True
         return False
 
