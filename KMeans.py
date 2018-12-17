@@ -16,8 +16,8 @@ class KMeans:
             self.centroids.append(self.fit_data[rand_index])
     
     def init_clusters(self):
-        self.clusters = {'data':{i:None for i in range(self.n_clusters)}}
-        self.clusters['labels']={i:None for i in range(self.n_clusters)}
+        self.clusters = {'data':{i:[] for i in range(self.n_clusters)}}
+        self.clusters['labels']={i:[] for i in range(self.n_clusters)}
 
     def fit(self,fit_data,fit_labels):
         self.fit_data = fit_data
@@ -35,18 +35,11 @@ class KMeans:
                     dist = np.linalg.norm(sample-centroid)
                     if dist<min_dist:
                         min_dist = dist
-                        self.predicted_labels[j] = i    
+                        self.predicted_labels[j] = i
                 if self.predicted_labels[j] is not None:
-                    if self.clusters['data'][self.predicted_labels[j]] is None:
-                        self.clusters['data'][self.predicted_labels[j]] = np.array(sample)
-                    else:
-                        self.clusters['data'][self.predicted_labels[j]] = np.vstack((self.clusters['data'][self.predicted_labels[j]],sample))
-                    
-                    if self.clusters['labels'][self.predicted_labels[j]] is None:
-                        self.clusters['labels'][self.predicted_labels[j]] = []
+                        self.clusters['data'][self.predicted_labels[j]].append(sample)                    
                         self.clusters['labels'][self.predicted_labels[j]].append(self.fit_labels[j])
-                    else:
-                        self.clusters['labels'][self.predicted_labels[j]].append(self.fit_labels[j])
+            self.reshape_cluster()
             self.update_centroids()
             self.calculate_loss()
             print("\nIteration:",self.iterations,'Loss:',self.loss,'Difference:',self.centroids_dist)
@@ -59,6 +52,10 @@ class KMeans:
                 self.centroids[i] = self.fit_data[np.random.choice(range(len(self.fit_data)))]
             else:
                 self.centroids[i] = np.mean(cluster,axis=0)
+    
+    def reshape_cluster(self):
+        for id,mat in list(self.clusters['data'].items()):
+            self.clusters['data'][id] = np.array(mat)
 
     def converged(self,iterations,centroids,updated_centroids):
         if iterations > self.max_iter:

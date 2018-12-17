@@ -3,7 +3,7 @@ import numpy as np
 from os.path import join
 from os import listdir
 import matplotlib.pyplot as plt
-
+from tqdm import tqdm
 class DataReader:
 
     def __init__(self,root_dir,type='cifar-100'):
@@ -22,13 +22,14 @@ class DataReader:
             lbls_class = np.array(self.train_dict[b'coarse_labels'])
             return data,lbls_class,lbls_sub
         elif self.type == 'cifar-10':
-            data = np.empty(shape=(0,3072))
-            labels = np.empty(shape=(0,))
-            for file_ in listdir(self.root_dir):
+            data = []
+            labels = []
+            print("Reading")
+            for file_ in tqdm(listdir(self.root_dir)):
                 if file_.split('_')[0] == 'data':
                     dict = unpickle(join(self.root_dir,file_))
-                    data = np.vstack((data,dict[b'data']))
-                    labels  = np.hstack((labels,dict[b'labels']))
+                    data.extend(dict[b'data'])
+                    labels.extend(dict[b'labels'])
             return np.array(data),np.array(labels),None
 
     def get_test_data(self):
@@ -52,21 +53,7 @@ class DataReader:
     def reshape_to_plot(self,data):
         return data.reshape(data.shape[0],3,32,32).transpose(0,2,3,1).astype("uint8")
 
-    def plot_random(self,data,n):
-        data = self.reshape_to_plot(data)
-        x1 = min(n//2,5)
-        y1 = n//x1
-        x = min(x1,y1)
-        y = max(x1,y1)
-        fig, ax = plt.subplots(x,y,figsize=(3,3))
-        for j in range(x):
-            for k in range(y):
-                i = np.random.choice(range(len(data)))
-                ax[j][k].set_axis_off()
-                ax[j][k].imshow(data[i:i+1][0])
-        plt.show()
-
-    def plot_imgs(self,in_data,n):
+    def plot_imgs(self,in_data,n,random=False):
         data = np.empty(shape=(0,3072))
         for d in in_data:
             data = np.vstack((data,np.array(d)))
@@ -79,6 +66,8 @@ class DataReader:
         i=0
         for j in range(x):
             for k in range(y):
+                if random:
+                    i = np.random.choice(range(len(data)))
                 ax[j][k].set_axis_off()
                 ax[j][k].imshow(data[i:i+1][0])
                 i+=1
