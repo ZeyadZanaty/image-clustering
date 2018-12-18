@@ -25,7 +25,7 @@ class KMeans:
         self.predicted_labels = [None for _ in range(self.fit_data.shape[0])]
         self.init_centroids()
         self.iterations = 0
-        old_centroids = [np.zeros(shape=(3072,)) for _ in range(self.n_clusters)]
+        old_centroids = [np.zeros(shape=(fit_data.shape[1],)) for _ in range(self.n_clusters)]
         while not self.converged(self.iterations,old_centroids,self.centroids):
             old_centroids = copy.deepcopy(self.centroids)
             self.init_clusters()
