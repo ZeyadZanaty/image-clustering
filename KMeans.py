@@ -92,5 +92,5 @@ class KMeans:
             self.clusters_info.append([max_label,occur,len(list(labels)),acc])
             self.clusters_accuracy.append(acc)
             self.accuracy = sum(self.clusters_accuracy)/self.n_clusters
-            print('[cluster_label,no_occurence_of_label,total_samples_in_cluster,cluster_accuracy]',self.clusters_info)
-            print('Accuracy:',self.accuracy)
+        print('[cluster_label,no_occurence_of_label,total_samples_in_cluster,cluster_accuracy]',self.clusters_info)
+        print('Accuracy:',self.accuracy)
