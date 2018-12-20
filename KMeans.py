@@ -44,6 +44,7 @@ class KMeans:
             self.calculate_loss()
             print("\nIteration:",self.iterations,'Loss:',self.loss,'Difference:',self.centroids_dist)
             self.iterations+=1
+        self.calculate_accuracy()
 
     def update_centroids(self):
         for i in range(self.n_clusters):
@@ -73,3 +74,23 @@ class KMeans:
                 for v in value:
                     self.loss += np.linalg.norm(v-self.centroids[key])
         self.loss_per_iteration.append(self.loss)
+    
+    def calculate_accuracy(self):
+        self.clusters_labels = []
+        self.clusters_info = []
+        self.clusters_accuracy = []
+        for clust,labels in list(self.clusters['labels'].items()):
+            if isinstance(labels[0],(np.ndarray)):
+                labels = [l[0] for l in labels]
+            occur = 0
+            max_label = max(set(labels), key=labels.count)
+            self.clusters_labels.append(max_label)
+            for label in labels:
+                if label == max_label:
+                    occur+=1
+            acc = occur/len(list(labels))
+            self.clusters_info.append([max_label,occur,len(list(labels)),acc])
+            self.clusters_accuracy.append(acc)
+            self.accuracy = sum(self.clusters_accuracy)/self.n_clusters
+            print('[cluster_label,no_occurence_of_label,total_samples_in_cluster,cluster_accuracy]',self.clusters_info)
+            print('Accuracy:',self.accuracy)
