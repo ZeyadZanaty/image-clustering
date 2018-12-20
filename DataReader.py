@@ -79,9 +79,13 @@ class DataReader:
         plt.show()
     
     def plot_img(self,data):
-        assert data.shape == (3072,)
-        data = data.reshape(1,3072)
-        data = data.reshape(data.shape[0],3,32,32).transpose(0,2,3,1).astype("uint8")
+        if self.type !='mnist':
+            assert data.shape == (3072,)
+            data = data.reshape(1,3072)
+            data = data.reshape(data.shape[0],3,32,32).transpose(0,2,3,1).astype("uint8")
+        elif self.type == 'mnist':
+            assert data.shape == (28*28,)
+            data = data.reshape(1,28,28).astype('uint8')
         fig, ax = plt.subplots(figsize=(5,5))
         ax.imshow(data[0])
         plt.show()
@@ -114,6 +118,7 @@ class DataReader:
         labelsfile.seek(8) #Since no. of items = no. of images and is already read
         images_array = 255 - np.asarray(st.unpack('>'+'B'*nBytes,imagesfile.read(nBytes))).reshape((nImg,nR,nC))
         labels_array = np.asarray(st.unpack('>'+'B'*nImg,labelsfile.read(nImg))).reshape((nImg,1))
+        labels_array = [l[0] for l in labels_array]
         return images_array.reshape(60000,28*28),labels_array,None
 
 
