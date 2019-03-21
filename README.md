@@ -1,5 +1,5 @@
 # Image-Clustering
-K-Means Clustering on CIFAR-10/CIFAR-100/MNIST Datasets.
+K-Means Clustering Implementation on CIFAR-10/CIFAR-100/MNIST Datasets.
 
 ## Results
 # MNIST
